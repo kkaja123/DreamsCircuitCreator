@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Circuit Creator</title>
+        <link rel="stylesheet" href="circuitcreator-style.css">
+    </head>
+    <body>
+        <div class="top-bar">
+            <button id="export-btn">Export to .png</button>
+            <button id="new-btn">New Circuit</button>
+            <button id="palette-btn">Open Gadget Palette</button>
+            <input type="range" id="zoom-slider" min="1" max="50" value="10">
+        </div>
+
+        <canvas id="graphics"></canvas>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="circtuitcreator.js"></script>
+    </body>
+</html>
