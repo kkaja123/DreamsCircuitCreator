@@ -1,0 +1,156 @@
+Search
+Tools
+  Undo
+  Redo
+  Move
+  Stretch
+  Clone
+  Tweak
+  Delete
+  Hide
+  Freeze
+  Sculpture Detail
+Modes
+  Sculpt Mode
+  Paint Mode
+  Coat Mode
+  Style Mode
+  Effects Mode
+  Sound Mode
+  Test Mode
+  Update Mode
+  Photo Mode
+Animate
+  Action Recorder
+  Keyframe
+  Timeline
+  Record Possession
+  Mic On/Off
+Gadgets
+  Sensors & Input
+    Trigger Zone
+    Tag
+    Wireless Transmitter
+    Wireless Receiver
+    Controller Sensor
+    Grab Sensor
+    Movement Sensor
+    Angle Sensor
+    Rotation Sensor
+    Laser Scope
+    Impact Sensor
+    Signal Generator
+    Switch
+    Value Slider
+  Logic & Processing
+    Randomizer
+    Counter
+    AND Gate
+    OR Gate
+    XOR Gate
+    NOT Gate
+    Selector
+    Exclusive Gate
+    Signal Manipulator
+    Timer
+    Calculator
+    Microchip
+    Node
+    Splitter
+    Combiner
+    Variable
+    Variable Modifier
+  Movers & Output
+    Gyroscope
+    Mover
+    Advanced Mover
+    Follower
+    Rotator
+    Advanced Rotator
+    Look At Rotator
+    Rocket Rotator
+    Teleporter
+    Force Applier
+    Emitter
+    Destroyer
+    Health Manager
+    Health Modifier
+    Text Displayer
+    Dialogue Text Displayer
+    Subtitle Displayer
+    Number Displayer
+    Rumbler
+  Gameplay Gear
+    Checkpoint
+    Prize Bubble
+    Doorway
+    Auto Guide
+    Global Settings
+    Score
+    Score Modifier
+    Blank Puppet (Deluxe)
+    Blank Puppet (Basic)
+    Puppet Interface
+  Cameras & Lighting
+    Camera
+    Camera Pointer
+    Camera Shaker
+    Light
+    Fog
+    Sun & Sky
+    Grade & Effects
+    Wiper
+    Ruler
+  Connectors
+    Ball Joint
+    Bolt
+    Motor Bolt
+    Piston
+    Slider
+    String
+    Elastic
+  Sound
+    Speaker
+    Reverb A: Music 1
+    Reverb B: Music 2
+    Reverb C: Game 1
+    Reverb D: Game 2
+    Delay A: Long
+    Delay B: Ping-Pong
+    Delay C: Dub Echo
+    Delay D: Short Echo
+    Master Mixer
+    General Channel
+    Music Channel
+    Voice Channel
+    Character Channel
+    Background Channel
+    Gameplay Channel
+Guides
+  Obey Auto Guides
+  Grid Snap
+    Finer
+    Coarser
+  Stay Upright
+    Right Angles
+  Precise Move
+    Local Space
+    Grid Space
+  Studio Lighting
+  Floor
+Show/Hide
+  Preview Invisibility
+  Electronics
+    Lights and Cameras
+  Rulers
+  Zones
+  Connectors
+  X-Ray
+  Thermometer
+  Wires
+  Paint
+  Coat, Style, Effects
+  Hover Effect
+  Grab Points
+Rewind
+Start Time
