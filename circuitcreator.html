@@ -7,10 +7,14 @@
         <link rel="stylesheet" href="circuitcreator-style.css">
     </head>
     <body>
+        <div class="palette-menu" style="display: none;">
+
+        </div>
+
         <div class="top-bar block-element">
-            <a href="#export">Export to .png</a>
-            <a href="#new">New Circuit</a>
-            <a href="#palette">Palette</a>
+            <a href="javascript:void(0);" onclick="exportClickHandler()">Export to .png</a>
+            <a href="javascript:void(0);" onclick="newClickHandler()">New Circuit</a>
+            <a href="javascript:void(0);" onclick="paletteClickHandler()">Palette</a>
         </div>
 
         <div class="canvas-container block-element">

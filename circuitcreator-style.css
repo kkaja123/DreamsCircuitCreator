@@ -3,6 +3,20 @@ body
   margin: 0;
 }
 
+.palette-menu
+{
+  background-color: aquamarine;
+  position: absolute;
+  max-width: 600px;
+  min-width: 100px;
+  width: 50%;
+  left: 25%;
+  top: 65px;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+  height: 100px;
+}
+
 .top-bar
 {
   overflow: hidden;
@@ -33,6 +47,5 @@ body
 {
   display: block;
   margin-top: 48px;
-  background-color: coral;
   height: 100%;
 }

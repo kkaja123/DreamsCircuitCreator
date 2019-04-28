@@ -44,6 +44,24 @@ function drawImageOnCanvas(imgHandle, x, y)
 }
 
 /**********************************************************
+ * Button Handlers
+ *********************************************************/
+var displayPalette = false;
+function paletteClickHandler()
+{
+  displayPalette = !displayPalette;
+
+  if (displayPalette)
+  {
+    $(".palette-menu").css("display", "");
+  }
+  else
+  {
+    $(".palette-menu").css("display", "none");
+  }
+}
+
+/**********************************************************
  * Canvas Handlers
  *********************************************************/
 function canvasClickBegin(e)
@@ -83,13 +101,25 @@ function canvasMouseMove(e)
         item.x = x - item.offsetX;
         item.y = y - item.offsetY;
 
+        // Left bounds
         if (item.x < 0)
         {
           item.x = 0;
         }
+        // Right bounds
+        if (item.x + item.width > canvas.width())
+        {
+          item.x = canvas.width() - item.width;
+        }
+        // Top Bounds
         if (item.y < 0)
         {
           item.y = 0;
+        }
+        // Bottom bounds
+        if (item.y + item.height > canvas.height())
+        {
+          item.y = canvas.height() - item.height;
         }
       }
     }
@@ -116,10 +146,12 @@ function canvasClickEnd(e)
  *********************************************************/
 function init()
 {
+  var canvasMarginTop = parseInt(canvas.css("margin-top"), 10);
   canvas.attr({
     width: window.innerWidth,
-    height: window.innerHeight,
+    height: window.innerHeight - canvasMarginTop,
   });
+
   calc.img.onload = $.proxy(calc.handleImageLoad, calc);
   calc.img.src = "assets/icons/Calculator_prototype.png";
   calc.width = calc.img.naturalWidth;
