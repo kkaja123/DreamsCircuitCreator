@@ -27,7 +27,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
      inkscape:cx="158.20749"
-     inkscape:cy="186.0304"
+     inkscape:cy="211.62775"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,15 +54,13 @@
      inkscape:label="BG"
      transform="translate(0,-197)">
     <path
-       style="fill:#000000;stroke-width:1.07360494"
-       d="M 105.82617,910.86523 A 105.82677,105.82677 0 0 0 0,1016.6934 a 105.82677,105.82677 0 0 0 105.82617,105.8261 105.82677,105.82677 0 0 0 94.48828,-58.4355 v -95.00588 a 105.82677,105.82677 0 0 0 -94.48828,-58.21289 z"
-       transform="scale(0.26458333)"
+       style="fill:#000000;stroke-width:0.50724465"
+       d="M 55.356543,196.99995 A 49.999827,49.999827 0 0 0 5.357,247.00044 49.999827,49.999827 0 0 0 55.356543,296.99995 49.999827,49.999827 0 0 0 99.99929,269.39101 v -44.8873 A 49.999827,49.999827 0 0 0 55.356543,196.99995 Z"
        id="path5076-1"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:#000000;stroke-width:1.07106304"
-       d="m 105.82617,910.86523 v 211.65427 h 94.48828 V 910.86523 Z"
-       transform="scale(0.26458333)"
+       style="fill:#000000;stroke-width:0.50604367"
+       d="m 55.356543,196.99995 v 100 H 99.99929 v -100 z"
        id="rect5080-5"
        inkscape:connector-curvature="0" />
   </g>
@@ -74,16 +72,16 @@
      transform="translate(0,-197)">
     <circle
        id="path5076"
-       style="fill:#d3bc5f;stroke-width:0.25362319"
-       cy="269"
-       cx="28"
-       r="25" />
+       style="fill:#d3bc5f;stroke-width:0.45289698"
+       cy="247.00021"
+       cx="55.356827"
+       r="44.6427" />
     <rect
        id="rect5080"
-       width="25"
-       height="50"
-       x="28"
-       y="244"
-       style="fill:#d3bc5f;stroke-width:0.2530227" />
+       width="44.6427"
+       height="89.2854"
+       x="55.356827"
+       y="202.35751"
+       style="fill:#d3bc5f;stroke-width:0.45182469" />
   </g>
 </svg>

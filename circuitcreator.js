@@ -164,7 +164,7 @@ class Gadget
 
     for (let pin of pinArray)
     {
-      drawImageOnCanvas(pin.img, pin.x, pin.y, pin.imgDim, pin.imgDim);
+      pin.drawPinOnCanvas();
     }
   }
 
@@ -250,6 +250,11 @@ class Pin
              y1 : this.y + this.imgDim,
            };
   }
+
+  drawPinOnCanvas()
+  {
+    drawImageOnCanvas(this.img, this.x, this.y, this.imgDim, this.imgDim);
+  }
 }
 
 /**********************************************************
@@ -293,6 +298,7 @@ class Wire
  *********************************************************/
 function drawImageOnCanvas(imgHandle, x, y, width, height)
 {
+  context.imageSmoothingEnabled = false;
   context.drawImage(imgHandle, x, y, width, height);
 }
 
@@ -317,7 +323,7 @@ function newClickHandler()
   }
 }
 
- var displayPalette = false;
+var displayPalette = false;
 function paletteClickHandler()
 {
   displayPalette = !displayPalette;
@@ -459,10 +465,10 @@ function init()
 
   // Gadget creation (TEMPORARY DEV MODE!!)
   calc = new Gadget("calculator", "MyCalculator");
-  calc.baseImg.src = "assets/icons/gadget_base.png";
+  calc.baseImg.src = "assets/icons/gadget_base.svg";
 
   var timer = new Gadget("timer", "DelayTimer");
-  timer.baseImg.src = "assets/icons/gadget_base.png";
+  timer.baseImg.src = "assets/icons/gadget_base.svg";
   timer.x = 200;
   timer.y = 200;
 
