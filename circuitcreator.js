@@ -301,6 +301,7 @@ function drawImageOnCanvas(imgHandle, x, y, width, height)
  *********************************************************/
 function exportClickHandler()
 {
+  // DEV MODE
   for (let gadget of gadgets)
   {
     gadget.addPin("in");  // DEV ONLY to add input pins
@@ -309,6 +310,7 @@ function exportClickHandler()
 
 function newClickHandler()
 {
+  // DEV MODE
   for (let gadget of gadgets)
   {
     gadget.addPin("out");  // DEV ONLY to add output pins
