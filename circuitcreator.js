@@ -63,7 +63,7 @@ class Gadget
     this.pins = {
       input : [],
       output : [],
-    }
+    };
   }
 
   handleImageLoad()
@@ -201,6 +201,56 @@ class Gadget
       this.y = height - this.height;
     }
   }
+
+  checkForBaseCollision(x, y)
+  {
+    var hitResult = {isHit: false};
+
+    if (x > this.x &&
+        x < this.x + this.width &&
+        y > this.y &&
+        y < this.y + this.height)
+    {
+      hitResult.isHit = true;
+    }
+
+    return hitResult;
+  }
+
+  checkForPinCollision(x, y)
+  {
+    var hitResult = {isHit: false, hitPin: null};
+    var pinResult = false;
+
+    // Check input pin list for collision
+    for (let pin of this.pins.input)
+    {
+      pinResult = pin.checkForCollision(x, y);
+      if (pinResult)
+      {
+        hitResult.isHit = true;
+        hitResult.hitPin = pin;
+        break;
+      }
+    }
+
+    // Check output pin list for collision
+    if (!hitResult.isHit)
+    {
+      for (let pin of this.pins.output)
+      {
+        pinResult = pin.checkForCollision(x, y);
+        if (pinResult)
+        {
+          hitResult.isHit = true;
+          hitResult.hitPin = pin;
+          break;
+        }
+      }
+    }
+
+    return hitResult;
+  }
 }
 
 /**********************************************************
@@ -235,6 +285,7 @@ class Pin
     this.y = 0;
     this.connectedTo;  // Object that this Pin is connected to. Usually another Pin or an EmptyPoint.
     this.isEmpty = isEmpty;  // Set to true if this Pin is not attached to a gadget.
+    this.extraCollision = 4;  // Number of extra pixels to allow a hit to collide with this pin.
   }
 
   handleImageLoad()
@@ -255,6 +306,29 @@ class Pin
   {
     drawImageOnCanvas(this.img, this.x, this.y, this.imgDim, this.imgDim);
   }
+
+  checkForCollision(x, y)
+  {
+    var hitResult = false;
+    var pinBounds = this.getBounds();
+
+    // Add on extra collision hitbox
+    pinBounds.x0 -= this.extraCollision;
+    pinBounds.x1 += this.extraCollision;
+    pinBounds.y0 -= this.extraCollision;
+    pinBounds.y1 += this.extraCollision;
+
+    // Check collision on hitbox
+    if (x >= pinBounds.x0 &&
+        x <= pinBounds.x1 &&
+        y >= pinBounds.y0 &&
+        y <= pinBounds.y1)
+    {
+      hitResult = true;
+    }
+
+    return hitResult;
+  }
 }
 
 /**********************************************************
@@ -262,33 +336,78 @@ class Pin
  *********************************************************/
 class Wire
 {
-  constructor(inX, inY, outX, outY)
+  constructor(inPin, outPin)
   {
-    this.input = {x: inX, y: inY};
-    this.output = {x: outX, y: outY};
-
     // Declare fields
     this.lineCap = "round";
     this.color = "#00b33c";
     this.lineWidth = 4;
     this.bezierControlPointStrength = 50;
+    this.inPin = inPin;
+    this.outPin = outPin;
+    this.holdSource = "none";  // Dictates what type of pin is the source of the wire when held.
+    this.inPos = {
+      x: this.inPin.x + (this.inPin.imgDim / 2),
+      y: this.inPin.y + (this.inPin.imgDim / 2),
+    };
+    this.outPos = {
+      x: this.outPin.x + (this.outPin.imgDim / 2),
+      y: this.outPin.y + (this.outPin.imgDim / 2),
+    };
   }
 
   drawWire()
   {
+    // Update endpoint positions
+    this.inPos = {
+      x: this.inPin.x + (this.inPin.imgDim / 2),
+      y: this.inPin.y + (this.inPin.imgDim / 2),
+    };
+    this.outPos = {
+      x: this.outPin.x + (this.outPin.imgDim / 2),
+      y: this.outPin.y + (this.outPin.imgDim / 2),
+    };
+
+    // Draw path background
+    // Apply context attributes
+    context.lineCap = this.lineCap;
+    context.strokeStyle = "black";
+    context.lineWidth = this.lineWidth + 2;
+
+    // Draw Bezier path
+    context.beginPath();
+    context.moveTo(this.outPos.x, this.outPos.y);
+    var bezierControlPointAmount = (Math.sqrt(
+      Math.pow(this.inPos.x - this.outPos.x, 2)
+      + Math.pow(this.inPos.y - this.outPos.y, 2))
+      / 100 * this.bezierControlPointStrength);
+    context.bezierCurveTo(this.outPos.x + bezierControlPointAmount,
+                          this.outPos.y,
+                          this.inPos.x - bezierControlPointAmount,
+                          this.inPos.y,
+                          this.inPos.x,
+                          this.inPos.y);
+    context.stroke();
+
+    // Draw path foreground
+    // Apply context attributes
     context.lineCap = this.lineCap;
     context.strokeStyle = this.color;
     context.lineWidth = this.lineWidth;
 
+    // Draw Bezier path
     context.beginPath();
-    context.moveTo(this.input.x, this.input.y);
-    var bezierControlPointAmount = Math.sqrt(Math.pow(this.output.x - this.input.x, 2) + Math.pow(this.output.y - this.input.y, 2)) / 100 * this.bezierControlPointStrength;
-    context.bezierCurveTo(this.input.x + bezierControlPointAmount,
-                          this.input.y,
-                          this.output.x - bezierControlPointAmount,
-                          this.output.y,
-                          this.output.x,
-                          this.output.y);
+    context.moveTo(this.outPos.x, this.outPos.y);
+    var bezierControlPointAmount = (Math.sqrt(
+      Math.pow(this.inPos.x - this.outPos.x, 2)
+      + Math.pow(this.inPos.y - this.outPos.y, 2))
+      / 100 * this.bezierControlPointStrength);
+    context.bezierCurveTo(this.outPos.x + bezierControlPointAmount,
+                          this.outPos.y,
+                          this.inPos.x - bezierControlPointAmount,
+                          this.inPos.y,
+                          this.inPos.x,
+                          this.inPos.y);
     context.stroke();
   }
 }
@@ -336,11 +455,6 @@ function paletteClickHandler()
   {
     $(".palette-menu").css("display", "none");
   }
-
-  // DEV MODE
-  var wire1 = new Wire(300, 300, 1000, 200);
-  wires.push(wire1);
-  refreshCanvas();
 }
 
 /**********************************************************
@@ -368,33 +482,97 @@ function canvasClickBegin(e)
 {
   var inputPos = getInputPositionRelativeToCanvas(e);
 
-  for (let gadget of gadgets)
+  if (!isItemHeld)
   {
-    if (!isItemHeld &&
-        inputPos.x > gadget.x &&
-        inputPos.x < gadget.x + gadget.width &&
-        inputPos.y > gadget.y &&
-        inputPos.y < gadget.y + gadget.height)
+    for (let gadget of gadgets)
     {
-      gadget.isHeld = true;
-      isItemHeld = true;
-      gadget.offsetX = inputPos.x - gadget.x;
-      gadget.offsetY = inputPos.y - gadget.y;
+      var hitResult = gadget.checkForBaseCollision(inputPos.x, inputPos.y);
+      if (hitResult.isHit)
+      {
+        gadget.isHeld = true;
+        gadget.offsetX = inputPos.x - gadget.x;
+        gadget.offsetY = inputPos.y - gadget.y;
+        isItemHeld = true;
 
-      break;  // Only grab one gadget
-    }
-    else if (!isItemHeld)  // TODO: check for pin hit on click. Create new wire.
-    {
+        break;  // Only grab a single gadget
+      }
+      else
+      {
+        hitResult = gadget.checkForPinCollision(inputPos.x, inputPos.y);
+        if (hitResult.isHit)
+        {
+          var inPin = null;
+          var outPin = null;
+          var pinType = hitResult.hitPin.pinType;
 
+          if (pinType === "in")
+          {
+            inPin = hitResult.hitPin;
+            outPin = new Pin("out", true);
+            outPin.x = inputPos.x;
+            outPin.y = inputPos.y;
+            outPin.imgDim = 0;
+          }
+          else if (pinType === "out")
+          {
+            outPin = hitResult.hitPin;
+            inPin = new Pin("in", true);
+            inPin.x = inputPos.x;
+            inPin.y = inputPos.y;
+            inPin.imgDim = 0;
+          }
+
+          var pinWire = new Wire(inPin, outPin);
+          pinWire.holdSource = pinType;
+          wires.push(pinWire);
+          isItemHeld = true;
+          refreshCanvas();
+
+          break;  // Only grab a single wire
+        }
+      }
     }
   }
-  // DEV MODE
-  if (wires.length > 0)
+  else
   {
-    wires[0].output.x = inputPos.x;
-    wires[0].output.y = inputPos.y;
-    refreshCanvas();
+    for (let wire of wires)
+    {
+      if (wire.holdSource === "in" || wire.holdSource === "out")
+      {
+        // Search for a pin collision
+        for (let gadget of gadgets)
+        {
+          var hitResult = gadget.checkForPinCollision(inputPos.x, inputPos.y);
+
+          if (hitResult.isHit)
+          {
+            if (wire.holdSource === "in" && hitResult.hitPin.pinType === "out")
+            {
+              wire.outPin = hitResult.hitPin;
+              isItemHeld = false;
+              wire.holdSource = "none";
+              refreshCanvas();
+              break;  // Attach wire to only one gadget pin
+            }
+            else if (wire.holdSource === "out" && hitResult.hitPin.pinType === "in")
+            {
+              wire.inPin = hitResult.hitPin;
+              isItemHeld = false;
+              wire.holdSource = "none";
+              refreshCanvas();
+              break;  // Attach wire to only one gadget pin
+            }
+            else
+            {
+              alert("Cannot attach wire from pin type " + wire.holdSource +
+                " to pin type " + hitResult.hitPin.pinType + ".");
+            }
+          }
+        }
+      }
+    }
   }
+
   isMouseDown = true;
 }
 
@@ -408,18 +586,38 @@ function canvasMouseMove(e)
       canvasClickEnd(e);
     }
   }
-  if (isMouseDown)
+
+  if (isItemHeld)
   {
     var inputPos = getInputPositionRelativeToCanvas(e);
 
-    for (let gadget of gadgets)
+    // Handle dragging the gadget base
+    if (isMouseDown)
     {
-      if (gadget.isHeld)
+      for (let gadget of gadgets)
       {
-        gadget.x = inputPos.x - gadget.offsetX;
-        gadget.y = inputPos.y - gadget.offsetY;
+        if (gadget.isHeld)
+        {
+          gadget.x = inputPos.x - gadget.offsetX;
+          gadget.y = inputPos.y - gadget.offsetY;
 
-        gadget.doBoundsCheck(canvas.width(), canvas.height());
+          gadget.doBoundsCheck(canvas.width(), canvas.height());
+        }
+      }
+    }
+
+    // Handle click and moving wire end
+    for (let wire of wires)
+    {
+      if (wire.holdSource === "in")
+      {
+        wire.outPin.x = inputPos.x;
+        wire.outPin.y = inputPos.y;
+      }
+      else if (wire.holdSource === "out")
+      {
+        wire.inPin.x = inputPos.x;
+        wire.inPin.y = inputPos.y;
       }
     }
 
@@ -429,16 +627,20 @@ function canvasMouseMove(e)
 
 function canvasClickEnd(e)
 {
-  for (let gadget of gadgets)
+  if (isItemHeld)
   {
-    if (gadget.isHeld)
+    for (let gadget of gadgets)
     {
-      gadget.isHeld = false;
+      if (gadget.isHeld)
+      {
+        gadget.isHeld = false;
+        isItemHeld = false;
+        refreshCanvas();
+      }
     }
   }
 
   isMouseDown = false;
-  isItemHeld = false;
 }
 
 function getInputPositionRelativeToCanvas(e)
