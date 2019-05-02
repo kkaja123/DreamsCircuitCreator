@@ -49,8 +49,15 @@ class Gadget
     }
 
     // Declare fields
-    this.baseImg = new Image();
-    this.baseImg.onload = $.proxy(this.handleImageLoad, this);
+    this.middleImg = new Image();
+    this.middleImg.onload = $.proxy(this.handleImageLoad, this);
+    this.middleImg.src = "assets/icons/gadget_middle.png";
+    this.topImg = new Image();
+    this.topImg.onload = $.proxy(this.handleImageLoad, this);
+    this.topImg.src = "assets/icons/gadget_top.png";
+    this.bottomImg = new Image();
+    this.bottomImg.onload = $.proxy(this.handleImageLoad, this);
+    this.bottomImg.src = "assets/icons/gadget_bottom.png";
     this.symbolImg = new Image();
     this.symbolImg.onload = $.proxy(this.handleImageLoad, this);
     this.x = 0;
@@ -64,6 +71,9 @@ class Gadget
       input : [],
       output : [],
     };
+    // The scale of the size for the top and bottom bits compared to the width
+    // I.e. 25.0 mm height x 100.0 mm width = 0.25
+    this.endBitsScale = 0.25;
   }
 
   handleImageLoad()
@@ -110,11 +120,11 @@ class Gadget
 
   repositionPins()
   {
+    this.recalculateHeightByPinCount();
     this.repositionPinsByType("in");
     this.repositionPinsByType("out");
   }
 
-  // TODO: Pin repositioning is bugged.
   repositionPinsByType(pinType)
   {
     var pinArray = this.getPinArray(pinType);
@@ -142,13 +152,53 @@ class Gadget
     }
   }
 
+  recalculateHeightByPinCount()
+  {
+    var inputPinHeight = 0;
+    var outputPinHeight = 0;
+    var maxPinHeight = 0;
+    var endBitsHeight = this.width * this.endBitsScale;
+    var minimumMiddleHeight = this.width - 2 * endBitsHeight;
+
+    for (let pin of this.pins.input)
+    {
+      inputPinHeight += pin.imgDim + pin.extraCollision;  // Normally, we'd use 2 * extra collision to encap. full collision box, but it's a bit overbearing.
+    }
+
+    for (let pin of this.pins.output)
+    {
+      outputPinHeight += pin.imgDim + pin.extraCollision;
+    }
+
+    maxPinHeight = inputPinHeight > outputPinHeight ? inputPinHeight : outputPinHeight;
+    if (maxPinHeight > minimumMiddleHeight)
+    {
+      this.height = endBitsHeight * 2 + maxPinHeight;
+    }
+    else
+    {
+      this.height = endBitsHeight * 2 + minimumMiddleHeight;
+    }
+  }
+
   drawGadgetOnCanvas()
   {
-    // Draw base image
-    drawImageOnCanvas(this.baseImg, this.x, this.y, this.width, this.height);
-    // Draw symbol image
-    // TODO: Draw symbol overlay
+    var endBitsHeight = this.width * this.endBitsScale;
+
+    // Prep gadget
     this.repositionPins();
+
+    // Draw top of base image
+    drawImageOnCanvas(this.topImg, this.x, this.y, this.width, endBitsHeight);
+    // Draw middle of base image
+    drawImageOnCanvas(this.middleImg, this.x, this.y + endBitsHeight, this.width, this.height - 2 * endBitsHeight);
+    // Draw bottom of base image
+    drawImageOnCanvas(this.bottomImg, this.x, this.y + this.height - endBitsHeight, this.width, endBitsHeight);
+
+    // Draw symbol image
+    drawImageOnCanvas(this.symbolImg, this.x, this.y + this.height / 2 - this.width / 2, this.width, this.width);  // Force symbol into square scale. This means original image should have a square ratio!
+
+    // Draw pins
     this.drawPinsOnCanvas();
   }
 
@@ -667,10 +717,11 @@ function init()
 
   // Gadget creation (TEMPORARY DEV MODE!!)
   calc = new Gadget("calculator", "MyCalculator");
-  calc.baseImg.src = "assets/icons/gadget_base.svg";
+  calc.symbolImg.src = "assets/icons/symbols/logic/calculator.png";
+  //calc.height = 150;
 
   var timer = new Gadget("timer", "DelayTimer");
-  timer.baseImg.src = "assets/icons/gadget_base.svg";
+  timer.symbolImg.src = "assets/icons/symbols/logic/calculator.png";
   timer.x = 200;
   timer.y = 200;
 
